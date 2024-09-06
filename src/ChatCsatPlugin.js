@@ -1,7 +1,10 @@
 import React from 'react';
 import { FlexPlugin } from '@twilio/flex-plugin';
 
-import CustomTaskList from './components/CustomTaskList/CustomTaskList';
+import { SendCSATButton } from './components/SendCSATButton/SendCSATButton';
+import './notifications';
+import './actions';
+import { CustomizationProvider } from '@twilio-paste/core/dist/customization';
 
 const PLUGIN_NAME = 'ChatCsatPlugin';
 
@@ -17,7 +20,18 @@ export default class ChatCsatPlugin extends FlexPlugin {
    * @param flex { typeof import('@twilio/flex-ui') }
    */
   async init(flex, manager) {
-    const options = { sortOrder: -1 };
-    flex.AgentDesktopView.Panel1.Content.add(<CustomTaskList key="ChatCsatPlugin-component" />, options);
+    flex.setProviders({
+      PasteThemeProvider: CustomizationProvider
+    });
+
+    flex.TaskCanvasHeader.Content.add(
+      <SendCSATButton key='send-csat-button' />,
+      {
+        sortOrder: 1,
+        if: props =>
+          props.channelDefinition.capabilities.has('Chat') &&
+          props.task.taskStatus === 'assigned'
+      }
+    )
   }
 }
