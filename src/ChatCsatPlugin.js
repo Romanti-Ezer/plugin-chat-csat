@@ -21,17 +21,17 @@ export default class ChatCsatPlugin extends FlexPlugin {
    */
   async init(flex, manager) {
     flex.setProviders({
-      PasteThemeProvider: CustomizationProvider
+      PasteThemeProvider: CustomizationProvider,
     });
 
     flex.TaskCanvasHeader.Content.add(
-      <SendCSATButton key='send-csat-button' />,
+      <SendCSATButton key="send-csat-button" />,
       {
         sortOrder: 1,
-        if: props =>
+        if: (props) =>
           props.channelDefinition.capabilities.has('Chat') &&
-          props.task.taskStatus === 'assigned'
+          props.task.taskStatus === 'assigned',
       }
-    )
+    );
   }
 }
