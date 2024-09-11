@@ -31,7 +31,6 @@ const sendCSAT = async (payload, original) => {
     channelSid: agent.channelSid,
     participantSid: agent.participantSid,
     conversationSid: agent.mediaProperties.conversationSid,
-    taskSid: payload.task.taskSid,
   };
 
   try {
