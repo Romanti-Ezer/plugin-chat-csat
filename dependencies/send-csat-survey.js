@@ -1,14 +1,9 @@
 exports.handler = async function (context, event, callback) {
   const client = context.getTwilioClient();
   const CSAT_STUDIO_FLOW_SID = context.CSAT_STUDIO_FLOW_SID;
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  const {
-    interactionSid,
-    channelSid,
-    participantSid,
-    conversationSid,
-    taskSid,
-  } = event;
+  const { interactionSid, channelSid, participantSid, conversationSid } = event;
 
   // Create a custom Twilio Response
   const response = new Twilio.Response();
@@ -18,13 +13,7 @@ exports.handler = async function (context, event, callback) {
   response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS, POST, GET');
   response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (
-    !interactionSid ||
-    !channelSid ||
-    !participantSid ||
-    !conversationSid ||
-    !taskSid
-  ) {
+  if (!interactionSid || !channelSid || !participantSid || !conversationSid) {
     const errorMessage = `(${context.PATH}) Please provide all required parameters to continue`;
     console.error(errorMessage);
     response.appendHeader('Content-Type', 'plain/text');
@@ -50,6 +39,9 @@ exports.handler = async function (context, event, callback) {
         'configuration.flowSid': CSAT_STUDIO_FLOW_SID,
         target: 'studio',
       });
+
+    // Include some delay so Copilot runs before including the CSAT message
+    await delay(2000);
 
     // Send message
     // When the customer replies, the Studio flow set above will receive it
